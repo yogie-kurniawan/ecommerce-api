@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form
+      id="form"
+      action="/api/products"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <label for="">Title</label>
+      <input type="text" name="title" id="title" /> <br />
+      <label for="">Desc</label>
+      <textarea name="desc" id="desc" cols="30" rows="10"></textarea> <br />
+      <label for="">Image</label>
+      <input type="file" name="img" id="img" multiple /> <br />
+      <label for="">Categories</label>
+      <input type="text" name="categories" id="categories" /> <br />
+      <label for="">price</label>
+      <input type="number" name="price" id="price" /> <br />
+      <button>Save</button>
+    </form>
+    <script>
+      const form = document.getElementById("form");
+      form.addEventListener("submit", submitForm);
+
+      async function submitForm(e) {
+        e.preventDefault();
+        const title = document.getElementById("title");
+        const desc = document.getElementById("desc");
+        const categories = document.getElementById("categories");
+        const price = document.getElementById("price");
+        const img = document.getElementById("img");
+
+        const formData = new FormData();
+        formData.append("title", title.value);
+        formData.append("desc", desc.value);
+        formData.append("categories", categories.value);
+        formData.append("price", price.value);
+        formData.append("img", img.files[0]);
+
+        try {
+          const response = await fetch(
+            "http://localhost:3000/api/products/create",
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+          const result = await response.json();
+          alert(result.message);
+          return;
+        } catch (err) {
+          alert(err.message);
+          return;
+        }
+      }
+    </script>
+  </body>
+</html>
