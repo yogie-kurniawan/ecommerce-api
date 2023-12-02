@@ -1,7 +1,7 @@
 # ecommerce-api
-E-Commerce RESTful API with Node.js and MongoDB 
+E-Commerce RESTful API with Node.js, Express.js and MongoDB 
 
-How to use run this project?
+How to run this project?
 1. Run "npm i" to install all required packages
 2. create an .env file, and define these variables:
     PORT=3000
