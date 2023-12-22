@@ -44,14 +44,11 @@ const getProduct = async (req, res, next) => {
 
 // CREATE PRODUCT
 const createProduct = async (req, res, next) => {
-  let title = req.body.title;
-  let desc = req.body.desc;
-  let categories = req.body.categories;
-  let price = req.body.price;
+  let {title, desc, categories, price} = req.body;
   let img = req.files.img;
   if (!title || !desc || !img || !categories || !price) {
     throw new badRequestError(
-      "Title, desc, img, categories and price cannot be empty!"
+      "Title, desc, img, categories, and price cannot be empty!"
     );
   }
 
@@ -59,15 +56,15 @@ const createProduct = async (req, res, next) => {
   let imgExt = path.extname(imgOriName);
   let imgName = Date.now() + imgExt;
   let newProduct = new Product({
-    title: req.body.title,
-    desc: req.body.desc,
-    categories: req.body.categories,
-    price: req.body.price,
+    title,
+    desc,
+    categories,
+    price,
     img: imgName,
   });
 
   try {
-    let dest = path.join(__dirname, "../public/assets/product/", imgName);
+    let dest = path.join(__dirname, "../public/assets/img/product/", imgName);
     const product = await Product.create(newProduct);
     img.mv(dest, function (err) {
       if (err) {
@@ -85,17 +82,24 @@ const createProduct = async (req, res, next) => {
 // UPDATE PRODUCT
 const updateProduct = async (req, res, next) => {
   const id = req.params.id;
+  let {title, desc, categories, price} = req.body;
+const img = req.files.img;
 
   try {
+let dest = path.join(__dirname, "../public/assets/img/product", imgName);
     const product = await Product.findByIdAndUpdate(
       id,
       {
-        $set: req.body,
+        $set: { title, 
+desc, 
+categories, 
+price,img: imgName},
       },
       { new: true }
     );
     if (!product) {
       throw new notFoundError("Product not found!");
+img.mv(dest, (err) => { if(err) return res.status(500).json({ message: err.message })})
     }
     return res.status(200).json({ product });
   } catch (err) {
